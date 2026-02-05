@@ -1,10 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect} from 'react'
 
-const App = () => {
+function App() {
   const [password, setPassword] = useState("")
   const [numberAllowed,setNumberAllowed] = useState(false)
   const [charAllowed, setCharAllowed] = useState(false)
   const [length, setLength] = useState(8)
+
+  const generatePassword = useCallback(() => {
+    let pass = ""
+    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" 
+    if (numberAllowed) str += "0123456789"
+    if (charAllowed) str += "!@#$%^&*"
+    
+    for(let i=1;i<length;i++)
+    {
+      const char = Math.floor(Math.random() * str.length + 1)
+      pass += str.charAt(char)
+    }
+    setPassword(pass)
+  },[length,numberAllowed,charAllowed])
+
+  useEffect(()=>{
+    generatePassword()
+  },[length,numberAllowed,charAllowed])
 
   return (
     <div className="relative h-screen">
